@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'domain/models/dtos/user_dto.dart';
 import 'domain/usecases/get_users_usecase.dart';
 
@@ -12,7 +14,9 @@ class UserController {
 
     if (!res.success) {
       contacts = [];
-      print(res.message);
+      if (kDebugMode) {
+        print(res.message);
+      }
     }
 
     contacts = res.body;
