@@ -37,14 +37,17 @@ class _UserPageState extends State<UserPage> {
           ),
         ),
         body: ListView.builder(
+            padding: const EdgeInsets.symmetric(vertical: 10),
             itemCount: controller.contacts.length,
             itemBuilder: (_, index) {
               final model = controller.contacts[index];
 
               return ListTile(
                 leading: CircleAvatar(
-                    child:
-                        Text(model.name?.substring(0, 2).toUpperCase() ?? '')),
+                    child: Text(
+                  model.name?.substring(0, 2).toUpperCase() ?? '',
+                  style: const TextStyle(color: Colors.blue),
+                )),
                 title: Text(model.name ?? ''),
                 subtitle: Text('${model.email ?? ''}\n ${model.phone ?? ''}'),
               );
