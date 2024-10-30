@@ -12,7 +12,6 @@ class GetUsersRepositoryImpl implements GetUsersRepository {
   Future<List<UserDto>> call() async {
     try {
       var res = await _getUsersDataSource();
-      List<UserDto> list = [];
 
       return res.map((e) => UserDto.fromMap(e)).toList();
     } catch (e) {
