@@ -6,6 +6,7 @@ import 'domain/repositories/get_users_repository.dart';
 import 'domain/usecases/get_users_usecase_impl.dart';
 import 'external/datasources/get_users_datasource_impl.dart';
 import 'presentation/users/users_page.dart';
+import 'users_controller.dart';
 
 class UserModule extends Module {
   @override
@@ -21,6 +22,11 @@ class UserModule extends Module {
     // Injeção do UseCase
     i.addSingleton<GetUsersUseCase>(
       () => GetUsersUseCaseImpl(i.get<GetUsersRepository>()),
+    );
+
+    // Injeção do Controller
+    i.addSingleton<UserController>(
+      () => UserController(i.get<GetUsersUseCase>()),
     );
   }
 

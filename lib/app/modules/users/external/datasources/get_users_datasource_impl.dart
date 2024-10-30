@@ -12,8 +12,8 @@ class GetUsersDataSourceImpl implements GetUsersDataSource {
   final httpClient = Dio();
 
   @override
-  Future<Map<String, dynamic>> call() async {
+  Future<List<Map<String, dynamic>>> call() async {
     var res = await httpClient.get('/users');
-    return res.data;
+    return List.from(res.data);
   }
 }
