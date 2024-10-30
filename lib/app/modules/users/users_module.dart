@@ -11,16 +11,16 @@ class UserModule extends Module {
   @override
   void binds(Injector i) {
     // Injeção do DataSource
-    i.addSingleton<GetUsersDataSource>(GetUsersDataSourceImpl().call);
+    i.addSingleton<GetUsersDataSource>(() => GetUsersDataSourceImpl());
 
     // Injeção do Repository
     i.addSingleton<GetUsersRepository>(
-      GetUsersRepositoryImpl(i.get<GetUsersDataSource>()).call,
+      () => GetUsersRepositoryImpl(i.get<GetUsersDataSource>()),
     );
 
     // Injeção do UseCase
     i.addSingleton<GetUsersUseCase>(
-      GetUsersUseCaseImpl(i.get<GetUsersRepository>()).call,
+      () => GetUsersUseCaseImpl(i.get<GetUsersRepository>()),
     );
   }
 
