@@ -17,9 +17,10 @@ class UserController {
       if (kDebugMode) {
         print(res.message);
       }
+      return;
     }
 
-    contacts = res.body;
+    contacts = res.body as List<UserDto>;
 
     // Ordenação apenas para fins estéticos
     contacts.sort((a, b) => a.name!.compareTo(b.name!));

@@ -8,6 +8,6 @@ class GetUsersDataSourceImpl implements GetUsersDataSource {
   @override
   Future<List<Map<String, dynamic>>> call() async {
     var res = await _client.get('/users');
-    return List.from(res.data);
+    return List.from(res);
   }
 }
