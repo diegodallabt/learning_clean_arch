@@ -10,17 +10,21 @@ class HttpClientAdaptive {
 
   final client = Dio();
 
-  Future get(String path,
-      {Object? data,
-      Map<String, dynamic>? queryParameters,
-      Options? options,
-      CancelToken? cancelToken,
-      void Function(int, int)? onReceiveProgress}) {
-    return client.get(path,
+  Future get(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    void Function(int, int)? onReceiveProgress,
+  }) async {
+    var res = await client.get(path,
         data: data,
         queryParameters: queryParameters,
         options: options,
         cancelToken: cancelToken,
         onReceiveProgress: onReceiveProgress);
+
+    return res.data;
   }
 }
