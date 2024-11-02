@@ -1,42 +1,79 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:learning_clean_arch/app/modules/users/data/repositories/add_user_repository_impl.dart';
+import 'package:learning_clean_arch/app/modules/users/domain/usecases/add_user_usecase_impl.dart';
 import 'package:learning_clean_arch/app/modules/users/domain/usecases/get_users_usecase.dart';
+import 'package:learning_clean_arch/app/modules/users/presentation/add_user/add_controller.dart';
+import 'package:learning_clean_arch/app/modules/users/presentation/add_user/add_page.dart';
 import '../shared/http/http_client.dart';
+import 'data/datasources/add_user_datasource.dart';
 import 'data/datasources/get_users_datasource.dart';
 import 'data/repositories/get_users_repository_impl.dart';
+import 'domain/repositories/add_user_repository.dart';
 import 'domain/repositories/get_users_repository.dart';
+import 'domain/usecases/add_user_usecase.dart';
 import 'domain/usecases/get_users_usecase_impl.dart';
+import 'external/datasources/add_user_datasource_impl.dart';
 import 'external/datasources/get_users_datasource_impl.dart';
 import 'presentation/users/users_page.dart';
-import 'users_controller.dart';
+import 'presentation/users/users_controller.dart';
 
 class UserModule extends Module {
   @override
   void binds(Injector i) {
-    // Injeção do Http Client
+    // HttpClient
     i.addSingleton<HttpClientAdaptive>(() => HttpClientAdaptive());
 
-    // Injeção do DataSource
+    // Datasources DI
     i.addSingleton<GetUsersDataSource>(
         () => GetUsersDataSourceImpl(i.get<HttpClientAdaptive>()));
 
-    // Injeção do Repository
+    i.addSingleton<AddUserDataSource>(
+        () => AddUserDataSourceImpl(i.get<HttpClientAdaptive>()));
+
+    // Repositorys DI
     i.addSingleton<GetUsersRepository>(
       () => GetUsersRepositoryImpl(i.get<GetUsersDataSource>()),
     );
 
-    // Injeção do UseCase
+    i.addSingleton<AddUserRepository>(
+        () => AddUserRepositoryImpl(i.get<AddUserDataSource>()));
+
+    // UseCases DI
     i.addSingleton<GetUsersUseCase>(
       () => GetUsersUseCaseImpl(i.get<GetUsersRepository>()),
     );
 
-    // Injeção do Controller
+    i.addSingleton<AddUserUseCase>(
+        () => AddUserUseCaseImpl(i.get<AddUserRepository>()));
+
+    // Controllers DI
     i.addSingleton<UserController>(
       () => UserController(i.get<GetUsersUseCase>()),
+    );
+
+    i.addSingleton<AddController>(
+      () => AddController(i.get<AddUserUseCase>()),
     );
   }
 
   @override
   void routes(RouteManager r) {
-    r.child('/', child: (context) => const UserPage());
+    final instantTransition = CustomTransition(
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return child;
+      },
+      transitionDuration: Duration.zero,
+    );
+
+    r.child(
+      '/',
+      child: (context) => const UserPage(),
+      customTransition: instantTransition,
+    );
+    r.child(
+      '/add',
+      child: (context) => const AddPage(),
+      customTransition: instantTransition,
+    );
   }
 }

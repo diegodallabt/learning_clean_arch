@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-import 'domain/models/dtos/user_dto.dart';
-import 'domain/usecases/get_users_usecase.dart';
+import '../../domain/models/dtos/user_dto.dart';
+import '../../domain/usecases/get_users_usecase.dart';
 
 class UserController {
   UserController(this._getUsersUseCase);

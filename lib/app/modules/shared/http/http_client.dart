@@ -27,4 +27,22 @@ class HttpClientAdaptive {
 
     return res.data;
   }
+
+  Future post(String path,
+      {Object? data,
+      Map<String, dynamic>? queryParameters,
+      Options? options,
+      CancelToken? cancelToken,
+      void Function(int, int)? onReceiveProgress,
+      void Function(int, int)? onSendProgress}) async {
+    var res = await client.post(path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+        cancelToken: cancelToken,
+        onReceiveProgress: onReceiveProgress,
+        onSendProgress: onSendProgress);
+
+    return res.data;
+  }
 }
