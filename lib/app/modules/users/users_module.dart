@@ -1,14 +1,20 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:learning_clean_arch/app/modules/users/data/repositories/add_user_repository_impl.dart';
+import 'package:learning_clean_arch/app/modules/users/data/repositories/delete_user_repository_impl.dart';
 import 'package:learning_clean_arch/app/modules/users/domain/usecases/add_user_usecase_impl.dart';
+import 'package:learning_clean_arch/app/modules/users/domain/usecases/delete_user_usecase.dart';
+import 'package:learning_clean_arch/app/modules/users/domain/usecases/delete_user_usecase_impl.dart';
 import 'package:learning_clean_arch/app/modules/users/domain/usecases/get_users_usecase.dart';
+import 'package:learning_clean_arch/app/modules/users/external/datasources/delete_user_datasource_impl.dart';
 import 'package:learning_clean_arch/app/modules/users/presentation/add_user/add_controller.dart';
 import 'package:learning_clean_arch/app/modules/users/presentation/add_user/add_page.dart';
 import '../shared/http/http_client.dart';
 import 'data/datasources/add_user_datasource.dart';
+import 'data/datasources/delete_user_datasource.dart';
 import 'data/datasources/get_users_datasource.dart';
 import 'data/repositories/get_users_repository_impl.dart';
 import 'domain/repositories/add_user_repository.dart';
+import 'domain/repositories/delete_user_repository.dart';
 import 'domain/repositories/get_users_repository.dart';
 import 'domain/usecases/add_user_usecase.dart';
 import 'domain/usecases/get_users_usecase_impl.dart';
@@ -30,6 +36,9 @@ class UserModule extends Module {
     i.addSingleton<AddUserDataSource>(
         () => AddUserDataSourceImpl(i.get<HttpClientAdaptive>()));
 
+    i.addSingleton<DeleteUserDataSource>(
+        () => DeleteUserDataSourceImpl(i.get<HttpClientAdaptive>()));
+
     // Repositorys DI
     i.addSingleton<GetUsersRepository>(
       () => GetUsersRepositoryImpl(i.get<GetUsersDataSource>()),
@@ -37,6 +46,9 @@ class UserModule extends Module {
 
     i.addSingleton<AddUserRepository>(
         () => AddUserRepositoryImpl(i.get<AddUserDataSource>()));
+
+    i.addSingleton<DeleteUserRepository>(
+        () => DeleteUserRepositoryImpl(i.get<DeleteUserDataSource>()));
 
     // UseCases DI
     i.addSingleton<GetUsersUseCase>(
@@ -46,9 +58,13 @@ class UserModule extends Module {
     i.addSingleton<AddUserUseCase>(
         () => AddUserUseCaseImpl(i.get<AddUserRepository>()));
 
+    i.addSingleton<DeleteUserUseCase>(
+        () => DeleteUserUseCaseImpl(i.get<DeleteUserRepository>()));
+
     // Controllers DI
     i.addSingleton<UserController>(
-      () => UserController(i.get<GetUsersUseCase>()),
+      () =>
+          UserController(i.get<GetUsersUseCase>(), i.get<DeleteUserUseCase>()),
     );
 
     i.addSingleton<AddController>(

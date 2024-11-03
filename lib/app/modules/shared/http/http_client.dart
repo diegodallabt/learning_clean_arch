@@ -18,12 +18,14 @@ class HttpClientAdaptive {
     CancelToken? cancelToken,
     void Function(int, int)? onReceiveProgress,
   }) async {
-    var res = await client.get(path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-        cancelToken: cancelToken,
-        onReceiveProgress: onReceiveProgress);
+    var res = await client.get(
+      path,
+      data: data,
+      queryParameters: queryParameters,
+      options: options,
+      cancelToken: cancelToken,
+      onReceiveProgress: onReceiveProgress,
+    );
 
     return res.data;
   }
@@ -35,13 +37,33 @@ class HttpClientAdaptive {
       CancelToken? cancelToken,
       void Function(int, int)? onReceiveProgress,
       void Function(int, int)? onSendProgress}) async {
-    var res = await client.post(path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-        cancelToken: cancelToken,
-        onReceiveProgress: onReceiveProgress,
-        onSendProgress: onSendProgress);
+    var res = await client.post(
+      path,
+      data: data,
+      queryParameters: queryParameters,
+      options: options,
+      cancelToken: cancelToken,
+      onReceiveProgress: onReceiveProgress,
+      onSendProgress: onSendProgress,
+    );
+
+    return res.data;
+  }
+
+  Future delete(String path,
+      {Object? data,
+      Map<String, dynamic>? queryParameters,
+      Options? options,
+      CancelToken? cancelToken,
+      void Function(int, int)? onReceiveProgress,
+      void Function(int, int)? onSendProgress}) async {
+    var res = await client.delete(
+      path,
+      data: data,
+      queryParameters: queryParameters,
+      options: options,
+      cancelToken: cancelToken,
+    );
 
     return res.data;
   }

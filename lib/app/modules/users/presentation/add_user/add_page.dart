@@ -13,12 +13,9 @@ class AddPage extends StatefulWidget {
 class _AddPageState extends State<AddPage> {
   final controller = Modular.get<AddController>();
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController =
-      TextEditingController(text: 'Sid Silva');
-  final TextEditingController _emailController =
-      TextEditingController(text: 'sid@email.com');
-  final TextEditingController _phoneController =
-      TextEditingController(text: '993-300');
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +45,7 @@ class _AddPageState extends State<AddPage> {
                 },
                 decoration: const InputDecoration(
                   hintText: "Fulano de Tal",
-                  focusedBorder: OutlineInputBorder(
+                  focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue, width: 2.0),
                   ),
                 ),
@@ -63,7 +60,7 @@ class _AddPageState extends State<AddPage> {
                 },
                 decoration: const InputDecoration(
                   hintText: "fulano@detal.com.br",
-                  focusedBorder: OutlineInputBorder(
+                  focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue, width: 2.0),
                   ),
                 ),
@@ -78,7 +75,7 @@ class _AddPageState extends State<AddPage> {
                 },
                 decoration: const InputDecoration(
                   hintText: "(XX) XXXX-XXXX",
-                  focusedBorder: OutlineInputBorder(
+                  focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue, width: 2.0),
                   ),
                 ),

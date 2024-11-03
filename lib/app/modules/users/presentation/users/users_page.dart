@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:learning_clean_arch/app/modules/users/presentation/users/users_controller.dart';
+
+import '../../domain/models/dtos/user_dto.dart';
 // import 'package:flutter_mobx/flutter_mobx.dart';
 
 class UserPage extends StatefulWidget {
@@ -17,11 +20,6 @@ class _UserPageState extends State<UserPage> {
   void initState() {
     super.initState();
     getData();
-  }
-
-  void getData() async {
-    await controller.getData();
-    setState(() {});
   }
 
   @override
@@ -56,16 +54,65 @@ class _UserPageState extends State<UserPage> {
           itemBuilder: (_, index) {
             final model = controller.contacts[index];
 
-            return ListTile(
-              leading: CircleAvatar(
-                  child: Text(
-                model.name?.substring(0, 2).toUpperCase() ?? '',
-                style: const TextStyle(color: Colors.blue),
-              )),
-              title: Text(model.name ?? ''),
-              subtitle: Text('${model.email ?? ''}\n ${model.phone ?? ''}'),
+            return Slidable(
+              endActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                children: [
+                  SlidableAction(
+                    flex: 2,
+                    onPressed: (_) => {},
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    icon: Icons.edit_outlined,
+                    label: 'Editar',
+                  ),
+                  SlidableAction(
+                    flex: 2,
+                    onPressed: (_) => deleteData(model, context),
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    icon: Icons.delete_outlined,
+                    label: 'Remover',
+                  ),
+                ],
+              ),
+              child: ListTile(
+                leading: CircleAvatar(
+                    child: Text(
+                  model.name?.substring(0, 2).toUpperCase() ?? '',
+                  style: const TextStyle(color: Colors.blue),
+                )),
+                title: Text(model.name ?? ''),
+                subtitle: Text('${model.email ?? ''}\n ${model.phone ?? ''}'),
+              ),
             );
           }),
     );
+  }
+
+  void getData() async {
+    await controller.getData();
+    setState(() {});
+  }
+
+  void deleteData(UserDto model, BuildContext context) async {
+    var res = await controller.deleteData(model.id);
+    if (res.success) {
+      setState(() {
+        getData();
+      });
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              backgroundColor: Colors.red,
+              content: Text(
+                textAlign: TextAlign.center,
+                "O contato ${model.name} foi excluído.",
+                style: const TextStyle(color: Colors.white),
+              )),
+        );
+      }
+    }
   }
 }
