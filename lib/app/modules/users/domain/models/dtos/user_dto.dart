@@ -7,7 +7,7 @@ class UserDto {
   final String? email;
   final String? createdAt;
 
-  factory UserDto.fromMap(Map map) => UserDto(
+  factory UserDto.fromMap(Map<String, dynamic> map) => UserDto(
         id: map['id'],
         name: map['name'],
         phone: map['phone'],
@@ -20,6 +20,6 @@ class UserDto {
         "name": name,
         "phone": phone,
         "email": email,
-        "creadtedAt": createdAt
+        "createdAt": createdAt
       };
 }

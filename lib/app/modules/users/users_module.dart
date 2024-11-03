@@ -12,14 +12,20 @@ import '../shared/http/http_client.dart';
 import 'data/datasources/add_user_datasource.dart';
 import 'data/datasources/delete_user_datasource.dart';
 import 'data/datasources/get_users_datasource.dart';
+import 'data/datasources/update_user_datasource.dart';
 import 'data/repositories/get_users_repository_impl.dart';
+import 'data/repositories/update_user_repository_impl.dart';
 import 'domain/repositories/add_user_repository.dart';
 import 'domain/repositories/delete_user_repository.dart';
 import 'domain/repositories/get_users_repository.dart';
+import 'domain/repositories/update_user_repository.dart';
 import 'domain/usecases/add_user_usecase.dart';
 import 'domain/usecases/get_users_usecase_impl.dart';
+import 'domain/usecases/update_user_usecase.dart';
+import 'domain/usecases/update_user_usecase_impl.dart';
 import 'external/datasources/add_user_datasource_impl.dart';
 import 'external/datasources/get_users_datasource_impl.dart';
+import 'external/datasources/update_user_datasource_impl.dart';
 import 'presentation/users/users_page.dart';
 import 'presentation/users/users_controller.dart';
 
@@ -39,6 +45,9 @@ class UserModule extends Module {
     i.addSingleton<DeleteUserDataSource>(
         () => DeleteUserDataSourceImpl(i.get<HttpClientAdaptive>()));
 
+    i.addSingleton<UpdateUserDataSource>(
+        () => UpdateUserDataSourceImpl(i.get<HttpClientAdaptive>()));
+
     // Repositorys DI
     i.addSingleton<GetUsersRepository>(
       () => GetUsersRepositoryImpl(i.get<GetUsersDataSource>()),
@@ -49,6 +58,9 @@ class UserModule extends Module {
 
     i.addSingleton<DeleteUserRepository>(
         () => DeleteUserRepositoryImpl(i.get<DeleteUserDataSource>()));
+
+    i.addSingleton<UpdateUserRepository>(
+        () => UpdateUserRepositoryImpl(i.get<UpdateUserDataSource>()));
 
     // UseCases DI
     i.addSingleton<GetUsersUseCase>(
@@ -61,6 +73,9 @@ class UserModule extends Module {
     i.addSingleton<DeleteUserUseCase>(
         () => DeleteUserUseCaseImpl(i.get<DeleteUserRepository>()));
 
+    i.addSingleton<UpdateUserUseCase>(
+        () => UpdateUserUseCaseImpl(i.get<UpdateUserRepository>()));
+
     // Controllers DI
     i.addSingleton<UserController>(
       () =>
@@ -68,7 +83,7 @@ class UserModule extends Module {
     );
 
     i.addSingleton<AddController>(
-      () => AddController(i.get<AddUserUseCase>()),
+      () => AddController(i.get<AddUserUseCase>(), i.get<UpdateUserUseCase>()),
     );
   }
 
@@ -88,7 +103,7 @@ class UserModule extends Module {
     );
     r.child(
       '/add',
-      child: (context) => const AddPage(),
+      child: (context) => AddPage(userDto: Modular.args.data),
       customTransition: instantTransition,
     );
   }

@@ -4,7 +4,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:learning_clean_arch/app/modules/users/presentation/users/users_controller.dart';
 
 import '../../domain/models/dtos/user_dto.dart';
-// import 'package:flutter_mobx/flutter_mobx.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});
@@ -60,7 +59,7 @@ class _UserPageState extends State<UserPage> {
                 children: [
                   SlidableAction(
                     flex: 2,
-                    onPressed: (_) => {},
+                    onPressed: (_) => _updateData(model),
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
                     icon: Icons.edit_outlined,
@@ -90,12 +89,12 @@ class _UserPageState extends State<UserPage> {
     );
   }
 
-  void getData() async {
+  getData() async {
     await controller.getData();
     setState(() {});
   }
 
-  void deleteData(UserDto model, BuildContext context) async {
+  deleteData(UserDto model, BuildContext context) async {
     var res = await controller.deleteData(model.id);
     if (res.success) {
       setState(() {
@@ -113,6 +112,13 @@ class _UserPageState extends State<UserPage> {
               )),
         );
       }
+    }
+  }
+
+  _updateData(UserDto model) async {
+    var res = await Modular.to.pushNamed('/add', arguments: model);
+    if (res == true) {
+      getData();
     }
   }
 }

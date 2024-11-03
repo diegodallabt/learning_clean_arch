@@ -4,7 +4,9 @@ import 'package:learning_clean_arch/app/modules/users/domain/models/dtos/user_dt
 import 'package:learning_clean_arch/app/modules/users/presentation/add_user/add_controller.dart';
 
 class AddPage extends StatefulWidget {
-  const AddPage({super.key});
+  const AddPage({this.userDto, super.key});
+
+  final UserDto? userDto;
 
   @override
   State<AddPage> createState() => _AddPageState();
@@ -18,14 +20,25 @@ class _AddPageState extends State<AddPage> {
   final TextEditingController _phoneController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+
+    if (widget.userDto != null) {
+      _nameController.text = widget.userDto!.name ?? '';
+      _emailController.text = widget.userDto!.email ?? '';
+      _phoneController.text = widget.userDto!.phone ?? '';
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
-        title: const Center(
+        title: Center(
           child: Text(
-            'Adicionar contato',
+            widget.userDto == null ? 'Adicionar contato' : 'Alterar contato',
           ),
         ),
       ),
@@ -43,6 +56,7 @@ class _AddPageState extends State<AddPage> {
                   if (v!.isEmpty) return 'Campo necessário';
                   return null;
                 },
+                cursorColor: Colors.blue,
                 decoration: const InputDecoration(
                   hintText: "Fulano de Tal",
                   focusedBorder: UnderlineInputBorder(
@@ -58,6 +72,7 @@ class _AddPageState extends State<AddPage> {
                   if (v!.isEmpty) return 'Campo necessário';
                   return null;
                 },
+                cursorColor: Colors.blue,
                 decoration: const InputDecoration(
                   hintText: "fulano@detal.com.br",
                   focusedBorder: UnderlineInputBorder(
@@ -73,6 +88,7 @@ class _AddPageState extends State<AddPage> {
                   if (v!.isEmpty) return 'Campo necessário';
                   return null;
                 },
+                cursorColor: Colors.blue,
                 decoration: const InputDecoration(
                   hintText: "(XX) XXXX-XXXX",
                   focusedBorder: UnderlineInputBorder(
@@ -93,22 +109,40 @@ class _AddPageState extends State<AddPage> {
                 ),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    var res = await controller.addContact(UserDto(
-                      name: _nameController.text,
-                      email: _emailController.text,
-                      phone: _phoneController.text,
-                    ));
+                    if (widget.userDto == null) {
+                      var res = await controller.addContact(UserDto(
+                        name: _nameController.text,
+                        email: _emailController.text,
+                        phone: _phoneController.text,
+                      ));
 
-                    if (res.success) {
-                      await alertMessage('Contato adicionado!');
-                      Modular.to.pop();
-                      Modular.to.pop(true);
+                      if (res.success) {
+                        await alertMessage('Contato adicionado!');
+                        Modular.to.pop();
+                        Modular.to.pop(true);
+                      } else {
+                        await alertMessage(res.message ?? 'ERROR');
+                      }
                     } else {
-                      await alertMessage(res.message ?? 'ERROR');
+                      var res = await controller.updateContact(UserDto(
+                        id: widget.userDto!.id,
+                        createdAt: widget.userDto!.createdAt,
+                        name: _nameController.text,
+                        email: _emailController.text,
+                        phone: _phoneController.text,
+                      ));
+
+                      if (res.success) {
+                        await alertMessage('Contato editado!');
+                        Modular.to.pop();
+                        Modular.to.pop(true);
+                      } else {
+                        await alertMessage(res.message ?? 'ERROR');
+                      }
                     }
                   }
                 },
-                child: const Text('Adicionar'),
+                child: Text(widget.userDto == null ? 'Adicionar' : 'Alterar'),
               ),
             ],
           ),
